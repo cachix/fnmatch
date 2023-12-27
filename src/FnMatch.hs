@@ -1,16 +1,18 @@
-module FnMatch (fnmatch, FnMatchFlags(..)) where
+{-# LANGUAGE CApiFFI #-}
 
-import Foreign.C
-import qualified Data.ByteString as BS
-import qualified Data.ByteString.Unsafe as BU
-import GHC.IO (unsafePerformIO)
+module FnMatch (fnmatch, FnMatchFlags (..)) where
+
 import Data.Bits ((.|.))
+import Data.ByteString qualified as BS
+import Data.ByteString.Unsafe qualified as BU
+import Foreign.C
+import GHC.IO (unsafePerformIO)
 
+foreign import capi "fnmatch.h fnmatch"
+  c_fnmatch ::
+    CString -> CString -> CInt -> IO CInt
 
-foreign import ccall "fnmatch" c_fnmatch 
-  :: CString -> CString -> CInt -> IO CInt
-
-data FnMatchFlags 
+data FnMatchFlags
   = FlagNoEscape
   | FlagPathName
   | FlagPeriod
@@ -25,7 +27,7 @@ fnmatch pattern str flags = unsafePerformIO $
     BU.unsafeUseAsCString str $ \c_str -> do
       result <- c_fnmatch c_pattern c_str flags'
       return (result == 0)
-  where 
+  where
     flags' = foldr (\flag acc -> acc .|. flag) 0 (map flagToCInt flags)
     flagToCInt FlagNoEscape = 1
     flagToCInt FlagPathName = 2
