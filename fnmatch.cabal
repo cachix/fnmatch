@@ -15,7 +15,9 @@ common shared
     ghc-options: -Wall
     default-extensions: OverloadedStrings
     default-language: GHC2021
-    build-depends: base >= 4.16, bytestring
+    build-depends: 
+      base >= 4.16 && < 5,
+      bytestring
 
 library
     import:           shared
