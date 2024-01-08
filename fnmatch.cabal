@@ -11,19 +11,19 @@ build-type:         Simple
 extra-doc-files:    CHANGELOG.md
 
 
-common warnings
+common shared
     ghc-options: -Wall
     default-extensions: OverloadedStrings
     default-language: GHC2021
     build-depends: base >= 4.16, bytestring
 
 library
-    import:           warnings
+    import:           shared
     exposed-modules:  FnMatch
     hs-source-dirs:   src
 
 test-suite fnmatch-test
-    import:           warnings
+    import:           shared
     type:             exitcode-stdio-1.0
     hs-source-dirs:   test
     main-is:          Main.hs
@@ -32,7 +32,7 @@ test-suite fnmatch-test
         hspec
 
 benchmark fnmatch-bench
-    import:           warnings
+    import:           shared
     type:             exitcode-stdio-1.0
     hs-source-dirs:   bench
     main-is:          Main.hs
